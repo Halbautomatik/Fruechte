@@ -460,6 +460,11 @@ textarea.refl-input::placeholder{color:var(--tdim);}
     <input class="set-input" type="password" id="api-key-input" placeholder="AIza…" oninput="saveApiKey()">
     <p style="font-size:12px;color:var(--tdim);margin-top:8px;font-family:'Inter',sans-serif;">Lokal gespeichert. Nie an Server gesendet.</p>
   </div>
+  <div class="set-section" id="install-section" style="display:none;">
+    <span class="set-lbl">App installieren</span>
+    <button class="btn-gold" id="install-btn" onclick="installApp()">⊕ Zum Homescreen hinzufügen</button>
+    <p style="font-size:12px;color:var(--tdim);margin-top:8px;font-family:'Inter',sans-serif;">Installiere die App für schnellen Zugriff ohne Browser.</p>
+  </div>
   <div class="set-section">
     <span class="set-lbl">Fortschritt zurücksetzen</span>
     <button class="btn-gold" onclick="resetProgress()" style="background:linear-gradient(135deg,#3a1a1a,#6a2a2a);color:#ffaaaa;">⚠ Alles zurücksetzen</button>
@@ -1180,6 +1185,34 @@ function resetProgress(){
   localStorage.removeItem('fdg4_state');
   localStorage.removeItem('fdg_onboarded');
   location.reload();
+}
+
+// ════════ PWA INSTALL ════════
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const section = document.getElementById('install-section');
+  if (section) section.style.display = 'block';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const section = document.getElementById('install-section');
+  if (section) section.style.display = 'none';
+});
+
+function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(result => {
+    deferredPrompt = null;
+    if (result.outcome === 'accepted') {
+      const section = document.getElementById('install-section');
+      if (section) section.style.display = 'none';
+    }
+  });
 }
 
 // ════════ BOOT ════════
