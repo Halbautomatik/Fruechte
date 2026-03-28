@@ -1193,7 +1193,7 @@ if(!localStorage.getItem('fdg_onboarded')){
 <script>
 if('serviceWorker' in navigator && !location.hostname.includes('claudeusercontent.com')){
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('/Fruechte/sw.js')
       .then(r => console.log('SW registered:', r.scope))
       .catch(e => console.log('SW error:', e));
   });
